@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "297330755579",
+    "firebase_url": "https://upcoming-movies-476ff.firebaseio.com",
+    "project_id": "upcoming-movies-476ff",
+    "storage_bucket": "upcoming-movies-476ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297330755579:android:56f5e207649b3a00",
+        "android_client_info": {
+          "package_name": "com.angeloparenteapp.upcomingmovies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297330755579-4m0532u7na52au8kj74bpsed267mtu66.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.angeloparenteapp.upcomingmovies",
+            "certificate_hash": "e28cce5f7086c98455b3b0ce236c843305b0b10d"
+          }
+        },
+        {
+          "client_id": "297330755579-rr1t6l3e2c3mrb6a9i4gjcj2jtahvahe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQktRVWBlJyspID_8g11s0mF53D4BlGi4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297330755579-rr1t6l3e2c3mrb6a9i4gjcj2jtahvahe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
