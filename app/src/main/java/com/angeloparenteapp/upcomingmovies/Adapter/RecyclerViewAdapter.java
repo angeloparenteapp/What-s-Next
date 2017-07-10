@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.angeloparenteapp.upcomingmovies.MainPoster;
 import com.angeloparenteapp.upcomingmovies.R;
@@ -21,11 +22,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<MainPoster> listOfElements;
     private Context mContext;
-    private RecyclerViewAdapter adapter;
 
     private String url = "https://image.tmdb.org/t/p/w500";
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView posterImage;
         public TextView posterTitle;
 
@@ -36,10 +36,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public RecyclerViewAdapter(Context context, ArrayList<MainPoster> listOfElements, RecyclerViewAdapter adapter) {
+    public RecyclerViewAdapter(Context context, ArrayList<MainPoster> listOfElements) {
         this.mContext = context;
         this.listOfElements = listOfElements;
-        this.adapter = adapter;
     }
 
     @Override
@@ -49,11 +48,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewAdapter.ViewHolder holder, int position) {
-        MainPoster currentElement = listOfElements.get(position);
+    public void onBindViewHolder(final RecyclerViewAdapter.ViewHolder holder, int position) {
+        final MainPoster currentElement = listOfElements.get(position);
 
         Glide.with(mContext).load(url + currentElement.getPosterImage()).into(holder.posterImage);
         holder.posterTitle.setText(currentElement.getPosterTitle());
+
+        holder.posterImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "You selected: " + currentElement.getPosterTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
