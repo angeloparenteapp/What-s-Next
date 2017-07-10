@@ -1,6 +1,7 @@
 package com.angeloparenteapp.upcomingmovies.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.angeloparenteapp.upcomingmovies.MainPoster;
+import com.angeloparenteapp.upcomingmovies.Activities.DetailActivity;
+import com.angeloparenteapp.upcomingmovies.Activities.MainActivity;
+import com.angeloparenteapp.upcomingmovies.MyClasses.MainPoster;
 import com.angeloparenteapp.upcomingmovies.R;
 import com.bumptech.glide.Glide;
 
@@ -58,6 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext, "You selected: " + currentElement.getPosterTitle(), Toast.LENGTH_SHORT).show();
+                mContext.startActivity(new Intent(mContext, DetailActivity.class).putExtra("title", currentElement.getPosterTitle()));
             }
         });
     }

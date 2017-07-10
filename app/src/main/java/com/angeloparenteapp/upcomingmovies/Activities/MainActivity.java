@@ -1,4 +1,4 @@
-package com.angeloparenteapp.upcomingmovies;
+package com.angeloparenteapp.upcomingmovies.Activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,6 +18,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.angeloparenteapp.upcomingmovies.Adapter.RecyclerViewAdapter;
+import com.angeloparenteapp.upcomingmovies.MyClasses.MainPoster;
+import com.angeloparenteapp.upcomingmovies.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,12 +100,17 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                page = 0;
+
                 if (navigation.getSelectedItemId() == R.id.navigation_movies) {
+                    listOfElements.clear();
+                    recyclerViewAdapter.notifyDataSetChanged();
                     fetchMovies();
                 } else if (navigation.getSelectedItemId() == R.id.navigation_shows) {
+                    listOfElements.clear();
+                    recyclerViewAdapter.notifyDataSetChanged();
                     fetchShows();
                 } else {
-                    Snackbar.make(navigation, "You selected Favorites", Snackbar.LENGTH_SHORT).show();
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
@@ -122,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     } else if (navigation.getSelectedItemId() == R.id.navigation_shows) {
                         fetchShows();
                     } else {
-                        Snackbar.make(navigation, "You selected Favorites", Snackbar.LENGTH_SHORT).show();
                         listOfElements.clear();
                         recyclerViewAdapter.notifyDataSetChanged();
                         swipeRefreshLayout.setRefreshing(false);

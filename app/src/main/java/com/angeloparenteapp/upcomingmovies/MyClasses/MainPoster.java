@@ -1,4 +1,4 @@
-package com.angeloparenteapp.upcomingmovies;
+package com.angeloparenteapp.upcomingmovies.MyClasses;
 
 public class MainPoster {
 
