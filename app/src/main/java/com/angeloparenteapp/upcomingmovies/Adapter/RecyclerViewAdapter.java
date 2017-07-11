@@ -28,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private String url = "https://image.tmdb.org/t/p/w500";
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView posterImage;
         public TextView posterTitle;
 
@@ -60,8 +60,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.posterImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "You selected: " + currentElement.getPosterTitle(), Toast.LENGTH_SHORT).show();
-                mContext.startActivity(new Intent(mContext, DetailActivity.class).putExtra("title", currentElement.getPosterTitle()));
+
+                Intent intent = new Intent(mContext, DetailActivity.class);
+
+                intent.putExtra("title", currentElement.getPosterTitle());
+                intent.putExtra("photo", currentElement.getPosterImage());
+                intent.putExtra("overview", currentElement.getPosterOverview());
+                intent.putExtra("key", currentElement.getPosterId());
+                intent.putExtra("is_movie", currentElement.isMovie());
+                intent.putExtra("release_date", currentElement.getReleaseDate());
+
+                mContext.startActivity(intent);
             }
         });
     }

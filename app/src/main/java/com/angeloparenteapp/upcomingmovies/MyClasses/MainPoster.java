@@ -2,12 +2,26 @@ package com.angeloparenteapp.upcomingmovies.MyClasses;
 
 public class MainPoster {
 
-    private String posterImage;
     private String posterTitle;
+    private String posterImage;
+    private String posterOverview;
+    private int posterId;
+    private boolean isMovie;
+    private String releaseDate;
 
-    public MainPoster(String posterTitle, String posterImage){
-        this.posterImage = posterImage;
+    public MainPoster(String posterTitle,
+                      String posterImage,
+                      String posterOverview,
+                      int posterId,
+                      boolean isMovie,
+                      String releaseDate){
+
         this.posterTitle = posterTitle;
+        this.posterImage = posterImage;
+        this.posterOverview = posterOverview;
+        this.posterId = posterId;
+        this.isMovie = isMovie;
+        this.releaseDate = releaseDate;
     }
 
     public void setPosterImage(String posterImage) {
@@ -18,11 +32,43 @@ public class MainPoster {
         this.posterTitle = posterTitle;
     }
 
+    public void setPosterOverview(String posterOverview) {
+        this.posterOverview = posterOverview;
+    }
+
+    public void setPosterId(int posterId) {
+        this.posterId = posterId;
+    }
+
+    public void setMovie(boolean movie) {
+        isMovie = movie;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
     public String getPosterImage() {
         return posterImage;
     }
 
     public String getPosterTitle() {
         return posterTitle;
+    }
+
+    public String getPosterOverview() {
+        return posterOverview;
+    }
+
+    public int getPosterId() {
+        return posterId;
+    }
+
+    public boolean isMovie() {
+        return isMovie;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
     }
 }

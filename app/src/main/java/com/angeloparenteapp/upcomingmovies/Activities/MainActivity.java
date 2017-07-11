@@ -27,16 +27,17 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerViewAdapter recyclerViewAdapter;
-    private RecyclerView recyclerView;
-    private ArrayList<MainPoster> listOfElements = new ArrayList<>();
+    RecyclerViewAdapter recyclerViewAdapter;
+    RecyclerView recyclerView;
+    ArrayList<MainPoster> listOfElements = new ArrayList<>();
 
-    private String date;
-    private String movieUrl;
-    private String showsUrl;
+    String date;
+    String movieUrl;
+    String showsUrl;
 
     RequestQueue queue;
     private static final String TAG = "QueueTag";
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_favorite:
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
-                    Snackbar.make(navigation, "You selected Favorites", Snackbar.LENGTH_SHORT).show();
                     return true;
             }
             return false;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        date = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA).format(Calendar.getInstance().getTime());
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
 
@@ -182,6 +182,30 @@ public class MainActivity extends AppCompatActivity {
         queue.add(jsObjRequest);
     }
 
+    public void setMovies(JSONObject response) {
+
+        try {
+            JSONArray results = response.getJSONArray("results");
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject current = results.getJSONObject(i);
+
+                String title = current.getString("title");
+                String posterPath = current.getString("poster_path");
+                String overview = current.getString("overview");
+                int id = current.getInt("id");
+                String releaseDate = current.getString("release_date");
+
+                if (!posterPath.equals("null")) {
+                    listOfElements.add(new MainPoster(title, posterPath, overview, id, true, releaseDate));
+                }
+            }
+
+        } catch (JSONException e) {
+            Log.e("QueryUtils", "Problem parsing the movies JSON results", e);
+        }
+    }
+
     public void fetchShows() {
 
         page++;
@@ -221,27 +245,6 @@ public class MainActivity extends AppCompatActivity {
         queue.add(jsObjRequest);
     }
 
-    public void setMovies(JSONObject response) {
-
-        try {
-            JSONArray results = response.getJSONArray("results");
-
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject current = results.getJSONObject(i);
-
-                String title = current.getString("title");
-                String posterPath = current.getString("poster_path");
-
-                if (!posterPath.equals("null")) {
-                    listOfElements.add(new MainPoster(title, posterPath));
-                }
-            }
-
-        } catch (JSONException e) {
-            Log.e("QueryUtils", "Problem parsing the movies JSON results", e);
-        }
-    }
-
     public void setShows(JSONObject response) {
 
         try {
@@ -252,9 +255,12 @@ public class MainActivity extends AppCompatActivity {
 
                 String title = current.getString("name");
                 String posterPath = current.getString("poster_path");
+                String overview = current.getString("overview");
+                int id = current.getInt("id");
+                String release_date = current.getString("first_air_date");
 
                 if (!posterPath.equals("null")) {
-                    listOfElements.add(new MainPoster(title, posterPath));
+                    listOfElements.add(new MainPoster(title, posterPath, overview, id, false, release_date));
                 }
             }
 
