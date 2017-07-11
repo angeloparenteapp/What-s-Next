@@ -1,21 +1,13 @@
 package com.angeloparenteapp.upcomingmovies.Activities;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.BoolRes;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -28,16 +20,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.angeloparenteapp.upcomingmovies.MyClasses.MainPoster;
 import com.angeloparenteapp.upcomingmovies.R;
 import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -87,8 +75,8 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         setTitle(title);
-        layoutTitle.setExpandedTitleColor(getResources().getColor(R.color.colorAccent));
-        layoutTitle.setCollapsedTitleTextColor(getResources().getColor(R.color.colorAccent));
+        layoutTitle.setExpandedTitleColor(getResources().getColor(R.color.white));
+        layoutTitle.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
 
         Glide.with(getApplicationContext()).load(imageUrl + photo).into(imageView);
 
@@ -131,12 +119,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        PorterDuff.Mode mMode = PorterDuff.Mode.SRC_ATOP;
-        Drawable d = getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
-        d.setColorFilter(getResources().getColor(R.color.colorAccent), mMode);
-
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(d);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }

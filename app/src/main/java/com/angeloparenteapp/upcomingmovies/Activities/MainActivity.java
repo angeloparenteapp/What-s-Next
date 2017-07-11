@@ -1,15 +1,20 @@
 package com.angeloparenteapp.upcomingmovies.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +29,7 @@ import com.angeloparenteapp.upcomingmovies.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,12 +44,17 @@ public class MainActivity extends AppCompatActivity {
     String date;
     String movieUrl;
     String showsUrl;
+    String searchUrl;
+    String searchItem;
 
     RequestQueue queue;
     private static final String TAG = "QueueTag";
 
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private BottomNavigationView navigation;
+    SwipeRefreshLayout swipeRefreshLayout;
+    BottomNavigationView navigation;
+    EditText searchView;
+    LinearLayout searchLayout;
+    ImageButton searchButton;
 
     int page;
 
@@ -54,25 +65,28 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_movies:
+                    searchLayout.setVisibility(View.GONE);
                     page = 0;
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     fetchMovies();
                     return true;
                 case R.id.navigation_shows:
+                    searchLayout.setVisibility(View.GONE);
                     page = 0;
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     fetchShows();
                     return true;
-                case R.id.navigation_favorite:
+                case R.id.navigation_search:
+                    searchLayout.setVisibility(View.VISIBLE);
+                    page = 0;
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     return true;
             }
             return false;
         }
-
     };
 
     @Override
@@ -91,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
 
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
+
+        searchLayout = (LinearLayout) findViewById(R.id.search_layout);
+        searchLayout.setVisibility(View.GONE);
+
+        searchView = (EditText) findViewById(R.id.search);
+        searchButton = (ImageButton) findViewById(R.id.search_button);
 
         recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), listOfElements);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -114,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
+                    fetchSearch();
                 }
             }
         });
@@ -131,11 +152,31 @@ public class MainActivity extends AppCompatActivity {
                     } else if (navigation.getSelectedItemId() == R.id.navigation_shows) {
                         fetchShows();
                     } else {
-                        listOfElements.clear();
-                        recyclerViewAdapter.notifyDataSetChanged();
-                        swipeRefreshLayout.setRefreshing(false);
+                        fetchSearch();
                     }
                 }
+            }
+        });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listOfElements.clear();
+                recyclerViewAdapter.notifyDataSetChanged();
+
+                searchItem = searchView.getText().toString();
+
+                searchItem = searchItem.replace(" ", "%20");
+
+                Log.d("VALOREEEEEE", searchItem);
+
+                searchView.clearFocus();
+                searchView.setText("");
+
+                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+
+                fetchSearch();
             }
         });
     }
@@ -261,6 +302,82 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!posterPath.equals("null")) {
                     listOfElements.add(new MainPoster(title, posterPath, overview, id, false, release_date));
+                }
+            }
+
+        } catch (JSONException e) {
+            Log.e("QueryUtils", "Problem parsing the movies JSON results", e);
+        }
+    }
+
+    public void fetchSearch() {
+
+        page++;
+
+        searchUrl = "https://api.themoviedb.org/3/search/multi?" +
+                "api_key=63eedc968f7dbca3af4fe9b1c47fb761&language=en-US" +
+                "&query=" + searchItem +
+                "&page=" + page +
+                "&include_adult=false";
+
+        swipeRefreshLayout.setRefreshing(true);
+
+        queue = Volley.newRequestQueue(MainActivity.this);
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, searchUrl, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        if (response != null) {
+                            setSearch(response);
+                            recyclerViewAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
+        jsObjRequest.setTag(TAG);
+        queue.add(jsObjRequest);
+    }
+
+    public void setSearch(JSONObject response) {
+
+        try {
+            JSONArray results = response.getJSONArray("results");
+
+            for (int i = 0; i < results.length(); i++) {
+                JSONObject current = results.getJSONObject(i);
+
+                String mediaType = current.getString("media_type");
+
+                if (mediaType.equals("movie")) {
+                    String title = current.getString("title");
+                    String posterPath = current.getString("poster_path");
+                    String overview = current.getString("overview");
+                    int id = current.getInt("id");
+                    String release_date = current.getString("release_date");
+
+                    if (!posterPath.equals("null")) {
+                        listOfElements.add(new MainPoster(title, posterPath, overview, id, true, release_date));
+                    }
+                } else if (mediaType.equals("tv")) {
+                    String title = current.getString("name");
+                    String posterPath = current.getString("poster_path");
+                    String overview = current.getString("overview");
+                    int id = current.getInt("id");
+                    String release_date = current.getString("first_air_date");
+
+                    if (!posterPath.equals("null")) {
+                        listOfElements.add(new MainPoster(title, posterPath, overview, id, false, release_date));
+                    }
                 }
             }
 

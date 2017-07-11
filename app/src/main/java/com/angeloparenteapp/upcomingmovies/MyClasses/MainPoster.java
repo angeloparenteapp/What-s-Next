@@ -14,7 +14,7 @@ public class MainPoster {
                       String posterOverview,
                       int posterId,
                       boolean isMovie,
-                      String releaseDate){
+                      String releaseDate) {
 
         this.posterTitle = posterTitle;
         this.posterImage = posterImage;

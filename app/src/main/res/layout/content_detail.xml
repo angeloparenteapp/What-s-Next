@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.angeloparenteapp.upcomingmovies.Activities.DetailActivity"
     tools:showIn="@layout/activity_detail">
@@ -21,7 +22,7 @@
             android:layout_gravity="center"
             android:layout_margin="16dp"
             android:gravity="center"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -37,7 +38,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Release Date: "
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="24sp" />
 
             <TextView
@@ -49,7 +50,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -60,11 +61,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="24dp"
             android:background="@color/colorAccent"
             android:gravity="center"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:text="PLAY TRAILER"
+            android:text="@string/play_trailer"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
