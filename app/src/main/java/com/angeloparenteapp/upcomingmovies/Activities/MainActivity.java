@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,11 +24,9 @@ import com.android.volley.toolbox.Volley;
 import com.angeloparenteapp.upcomingmovies.Adapter.RecyclerViewAdapter;
 import com.angeloparenteapp.upcomingmovies.MyClasses.MainPoster;
 import com.angeloparenteapp.upcomingmovies.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     fetchMovies();
+                    recyclerViewAdapter.notifyDataSetChanged();
                     return true;
                 case R.id.navigation_shows:
                     searchLayout.setVisibility(View.GONE);
@@ -77,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     fetchShows();
+                    recyclerViewAdapter.notifyDataSetChanged();
                     return true;
                 case R.id.navigation_search:
                     searchLayout.setVisibility(View.VISIBLE);
@@ -116,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(recyclerViewAdapter);
 
         fetchMovies();
+        recyclerViewAdapter.notifyDataSetChanged();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -126,15 +126,18 @@ public class MainActivity extends AppCompatActivity {
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     fetchMovies();
+                    recyclerViewAdapter.notifyDataSetChanged();
                 } else if (navigation.getSelectedItemId() == R.id.navigation_shows) {
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     fetchShows();
+                    recyclerViewAdapter.notifyDataSetChanged();
                 } else {
                     listOfElements.clear();
                     recyclerViewAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
                     fetchSearch();
+                    recyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -149,10 +152,13 @@ public class MainActivity extends AppCompatActivity {
                 if (totalItemCount == gridLayoutManager.findLastVisibleItemPosition() + 1) {
                     if (navigation.getSelectedItemId() == R.id.navigation_movies) {
                         fetchMovies();
+                        recyclerViewAdapter.notifyDataSetChanged();
                     } else if (navigation.getSelectedItemId() == R.id.navigation_shows) {
                         fetchShows();
+                        recyclerViewAdapter.notifyDataSetChanged();
                     } else {
                         fetchSearch();
+                        recyclerViewAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -173,10 +179,13 @@ public class MainActivity extends AppCompatActivity {
                 searchView.clearFocus();
                 searchView.setText("");
 
-                InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                if (getCurrentFocus() != null) {
+                    InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                }
 
                 fetchSearch();
+                recyclerViewAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -185,14 +194,15 @@ public class MainActivity extends AppCompatActivity {
 
         page++;
 
-        movieUrl = "https://api.themoviedb.org/3/discover/movie" +
-                "?api_key=63eedc968f7dbca3af4fe9b1c47fb761&" +
-                "language=en-US&" +
-                "sort_by=release_date.asc&" +
-                "include_adult=false&" +
-                "include_video=false&" +
-                "page=" + page + "&" +
-                "primary_release_date.gte=" + date;
+        movieUrl = "https://api.themoviedb.org/3/discover/movie?" +
+                "api_key=63eedc968f7dbca3af4fe9b1c47fb761" +
+                "&language=en-US" +
+                "&sort_by=primary_release_date.asc" +
+                "&include_adult=false" +
+                "&include_video=false" +
+                "&page=" + page +
+                "&primary_release_date.gte=" + date +
+                "&include_null_first_air_dates=true";
 
         swipeRefreshLayout.setRefreshing(true);
 
@@ -214,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 });
@@ -252,11 +261,12 @@ public class MainActivity extends AppCompatActivity {
         page++;
 
         showsUrl = "https://api.themoviedb.org/3/discover/tv" +
-                "?api_key=63eedc968f7dbca3af4fe9b1c47fb761&" +
-                "sort_by=first_air_date.asc" +
-                "&first_air_date.gte=" + date +
+                "?api_key=63eedc968f7dbca3af4fe9b1c47fb761" +
+                "&language=en-US" +
+                "&sort_by=first_air_date.asc" +
                 "&page=" + page +
-                "&include_null_first_air_dates=false";
+                "&first_air_date.gte=" + date +
+                "&include_null_first_air_dates=true";
 
         swipeRefreshLayout.setRefreshing(true);
 
