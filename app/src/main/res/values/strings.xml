@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Upcoming Movies</string>
+    <string name="app_name">What\'s Next</string>
     <string name="title_movies">Movies</string>
     <string name="title_shows">TV Shows</string>
     <string name="title_search">Search</string>

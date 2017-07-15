@@ -1,17 +1,17 @@
 package com.angeloparenteapp.upcomingmovies.Activities;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
+
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,7 +29,7 @@ import com.angeloparenteapp.upcomingmovies.MyClasses.Cast;
 import com.angeloparenteapp.upcomingmovies.MyClasses.Utils;
 import com.angeloparenteapp.upcomingmovies.R;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,7 +158,7 @@ public class DetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share");
-                intent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n" + "Release Date:     " +  releaseDate + "\n" + overview);
+                intent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n" + "Release Date:     " + releaseDate + "\n" + overview);
                 startActivity(Intent.createChooser(intent, "Share via"));
             }
         });
@@ -192,24 +192,19 @@ public class DetailActivity extends AppCompatActivity {
         queue.add(jsObjRequest);
     }
 
-    public void getKey(JSONObject response) {
+    public boolean getKey(JSONObject response) {
         try {
             JSONArray results = response.getJSONArray("results");
 
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject current = results.getJSONObject(i);
+            JSONObject current = results.getJSONObject(0);
 
-                videoKey = current.getString("key");
+            videoKey = current.getString("key");
 
-                if (videoKey.contains("https")) {
-                    isFullVideoUrl = true;
-                } else {
-                    isFullVideoUrl = false;
-                }
-            }
+            return videoKey.contains("https");
 
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing the movies JSON results", e);
+            return false;
         }
     }
 
@@ -251,7 +246,7 @@ public class DetailActivity extends AppCompatActivity {
     public void getCast(JSONObject response) {
         try {
 
-            if (isMovie){
+            if (isMovie) {
                 JSONArray results = response.getJSONArray("cast");
 
                 for (int i = 0; i < results.length(); i++) {
@@ -285,5 +280,9 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         castAdapter.notifyDataSetChanged();
+
+        if (castArrayList.isEmpty() && castArrayList.size() == 0){
+            Snackbar.make(castList, "No Cast Found", Snackbar.LENGTH_SHORT).show();
+        }
     }
 }
