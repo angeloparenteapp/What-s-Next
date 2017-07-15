@@ -5,12 +5,14 @@ public class MainPoster {
     private String posterTitle;
     private String posterImage;
     private String posterOverview;
+    private String backdropPath;
     private int posterId;
     private boolean isMovie;
     private String releaseDate;
 
     public MainPoster(String posterTitle,
                       String posterImage,
+                      String backdropPath,
                       String posterOverview,
                       int posterId,
                       boolean isMovie,
@@ -19,6 +21,7 @@ public class MainPoster {
         this.posterTitle = posterTitle;
         this.posterImage = posterImage;
         this.posterOverview = posterOverview;
+        this.backdropPath = backdropPath;
         this.posterId = posterId;
         this.isMovie = isMovie;
         this.releaseDate = releaseDate;
@@ -34,6 +37,10 @@ public class MainPoster {
 
     public void setPosterOverview(String posterOverview) {
         this.posterOverview = posterOverview;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     public void setPosterId(int posterId) {
@@ -58,6 +65,10 @@ public class MainPoster {
 
     public String getPosterOverview() {
         return posterOverview;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
     public int getPosterId() {

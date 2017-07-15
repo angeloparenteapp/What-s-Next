@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -98,18 +99,18 @@ public class MainActivity extends AppCompatActivity {
 
         date = new SimpleDateFormat("yyyy-MM-dd", Locale.CANADA).format(Calendar.getInstance().getTime());
 
+        searchLayout = (LinearLayout) findViewById(R.id.search_layout);
+        searchLayout.setVisibility(View.GONE);
+
+        searchView = (EditText) findViewById(R.id.search);
+
+        searchButton = (ImageButton) findViewById(R.id.search_button);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-
-        searchLayout = (LinearLayout) findViewById(R.id.search_layout);
-        searchLayout.setVisibility(View.GONE);
-
-        searchView = (EditText) findViewById(R.id.search);
-        searchButton = (ImageButton) findViewById(R.id.search_button);
 
         recyclerViewAdapter = new RecyclerViewAdapter(getApplicationContext(), listOfElements);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -167,14 +168,14 @@ public class MainActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                page = 0;
+
                 listOfElements.clear();
                 recyclerViewAdapter.notifyDataSetChanged();
 
                 searchItem = searchView.getText().toString();
 
                 searchItem = searchItem.replace(" ", "%20");
-
-                Log.d("VALOREEEEEE", searchItem);
 
                 searchView.clearFocus();
                 searchView.setText("");
@@ -242,12 +243,13 @@ public class MainActivity extends AppCompatActivity {
 
                 String title = current.getString("title");
                 String posterPath = current.getString("poster_path");
+                String backdropPath = current.getString("backdrop_path");
                 String overview = current.getString("overview");
                 int id = current.getInt("id");
                 String releaseDate = current.getString("release_date");
 
                 if (!posterPath.equals("null")) {
-                    listOfElements.add(new MainPoster(title, posterPath, overview, id, true, releaseDate));
+                    listOfElements.add(new MainPoster(title, posterPath, backdropPath ,overview, id, true, releaseDate));
                 }
             }
 
@@ -306,12 +308,13 @@ public class MainActivity extends AppCompatActivity {
 
                 String title = current.getString("name");
                 String posterPath = current.getString("poster_path");
+                String backdropPath = current.getString("backdrop_path");
                 String overview = current.getString("overview");
                 int id = current.getInt("id");
                 String release_date = current.getString("first_air_date");
 
                 if (!posterPath.equals("null")) {
-                    listOfElements.add(new MainPoster(title, posterPath, overview, id, false, release_date));
+                    listOfElements.add(new MainPoster(title, posterPath, backdropPath, overview, id, false, release_date));
                 }
             }
 
@@ -325,7 +328,8 @@ public class MainActivity extends AppCompatActivity {
         page++;
 
         searchUrl = "https://api.themoviedb.org/3/search/multi?" +
-                "api_key=63eedc968f7dbca3af4fe9b1c47fb761&language=en-US" +
+                "api_key=63eedc968f7dbca3af4fe9b1c47fb761" +
+                "&language=en-US" +
                 "&query=" + searchItem +
                 "&page=" + page +
                 "&include_adult=false";
@@ -371,24 +375,30 @@ public class MainActivity extends AppCompatActivity {
                 if (mediaType.equals("movie")) {
                     String title = current.getString("title");
                     String posterPath = current.getString("poster_path");
+                    String backdropPath = current.getString("backdrop_path");
                     String overview = current.getString("overview");
                     int id = current.getInt("id");
                     String release_date = current.getString("release_date");
 
                     if (!posterPath.equals("null")) {
-                        listOfElements.add(new MainPoster(title, posterPath, overview, id, true, release_date));
+                        listOfElements.add(new MainPoster(title, posterPath, backdropPath, overview, id, true, release_date));
                     }
                 } else if (mediaType.equals("tv")) {
                     String title = current.getString("name");
                     String posterPath = current.getString("poster_path");
+                    String backdropPath = current.getString("backdrop_path");
                     String overview = current.getString("overview");
                     int id = current.getInt("id");
                     String release_date = current.getString("first_air_date");
 
                     if (!posterPath.equals("null")) {
-                        listOfElements.add(new MainPoster(title, posterPath, overview, id, false, release_date));
+                        listOfElements.add(new MainPoster(title, posterPath, backdropPath, overview, id, false, release_date));
                     }
                 }
+            }
+
+            if (listOfElements.isEmpty() && listOfElements.size() == 0){
+                Snackbar.make(navigation, "No Results Found", Snackbar.LENGTH_SHORT).show();
             }
 
         } catch (JSONException e) {

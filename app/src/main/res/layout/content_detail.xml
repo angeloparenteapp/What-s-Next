@@ -28,10 +28,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/release_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -56,18 +56,52 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/lunch_video"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/trailer_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/trailer"
+                android:textColor="@color/white"
+                android:textSize="16sp"/>
+
+            <ImageButton
+                android:id="@+id/lunch_video"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@color/colorAccent"
+                android:gravity="center"
+                android:src="@drawable/ic_play_arrow_white_24dp"
+                android:text="@string/play_trailer"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/cast_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:background="@color/colorAccent"
+            android:layout_marginTop="16dp"
             android:gravity="center"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:text="@string/play_trailer"
-            android:textColor="@android:color/white" />
+            android:text="@string/cast"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cast_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="2dp" />
 
     </LinearLayout>
 

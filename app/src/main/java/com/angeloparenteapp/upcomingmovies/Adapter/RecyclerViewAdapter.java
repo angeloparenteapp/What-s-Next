@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.angeloparenteapp.upcomingmovies.Activities.DetailActivity;
 import com.angeloparenteapp.upcomingmovies.Activities.MainActivity;
 import com.angeloparenteapp.upcomingmovies.MyClasses.MainPoster;
+import com.angeloparenteapp.upcomingmovies.MyClasses.Utils;
 import com.angeloparenteapp.upcomingmovies.R;
 import com.bumptech.glide.Glide;
 
@@ -36,6 +37,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
             posterImage = itemView.findViewById(R.id.image_element);
             posterTitle = itemView.findViewById(R.id.title_element);
+
+            Utils.setTextViewCustomFont(mContext, posterTitle);
         }
     }
 
@@ -65,6 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 intent.putExtra("title", currentElement.getPosterTitle());
                 intent.putExtra("photo", currentElement.getPosterImage());
+                intent.putExtra("backdrop", currentElement.getBackdropPath());
                 intent.putExtra("overview", currentElement.getPosterOverview());
                 intent.putExtra("key", currentElement.getPosterId());
                 intent.putExtra("is_movie", currentElement.isMovie());
